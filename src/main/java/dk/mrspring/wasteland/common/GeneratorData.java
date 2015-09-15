@@ -5,6 +5,7 @@ import dk.mrspring.wasteland.util.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +57,24 @@ public class GeneratorData
         }
     }
 
+    public void loadFromFile(File file)
+    {
+        if (file != null && file.exists())
+        {
+            Schematic schematic = loadSchematicFromFile(file);
+            if (schematic != null) loadedSchematics.add(schematic);
+        }
+    }
+
     public ResourceLocation makeSchematicLocation(String name)
     {
         return new ResourceLocation("wlm", "schematics/" + name + ".schematic");
+    }
+
+    public Schematic loadSchematicFromFile(File file)
+    {
+        NBTTagCompound schematicTag = NBTUtils.getFromFile(file);
+        return schematicTag != null ? new Schematic(schematicTag) : null;
     }
 
     public Schematic loadSchematic(String name)

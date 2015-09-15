@@ -6,9 +6,15 @@ import java.util.Map;
 /**
  * Created on 14-09-2015 for TheWastelandMod.
  */
-public class LootConfigWrapper
+public class LootConfigWrapper implements IValidate<LootConfigWrapper>
 {
     public Map<String, LootCategory> loot_categories = new HashMap<>();
+
+    @Override
+    public void validate(LootConfigWrapper defaultValue)
+    {
+        // TODO: Validate values.
+    }
 
     public static class LootCategory
     {

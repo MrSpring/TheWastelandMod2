@@ -11,6 +11,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -33,16 +34,18 @@ public class TheWastelandMod
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event)
     {
-        GeneratorData.getInstance().loadDefaults();
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
-
-        schematic_placer = new ItemSchematicPlacer();
-        GameRegistry.registerItem(schematic_placer, "schematic_placer");
+        proxy.preInit(event);
     }
 
     @Mod.EventHandler
     public static void init(FMLInitializationEvent event)
     {
-        instance.wastelandWorldType = new WorldTypeWasteland();
+        proxy.init(event);
+    }
+
+    @Mod.EventHandler
+    public static void postInit(FMLPostInitializationEvent event)
+    {
+        proxy.postInit(event);
     }
 }

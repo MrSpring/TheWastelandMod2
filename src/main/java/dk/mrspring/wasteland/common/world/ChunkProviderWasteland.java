@@ -125,6 +125,11 @@ public class ChunkProviderWasteland implements IChunkProvider
         this.mobSpawnerNoise = (NoiseGeneratorOctaves) noiseGens[6];
     }
 
+    public ChunkProviderWasteland(World world)
+    {
+        this(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), "");
+    }
+
     public void setBlocksInChunk(int p_180518_1_, int p_180518_2_, ChunkPrimer p_180518_3_)
     {
         this.biomesForGeneration = this.worldObj.getWorldChunkManager().getBiomesForGeneration(this.biomesForGeneration, p_180518_1_ * 4 - 2, p_180518_2_ * 4 - 2, 10, 10);

@@ -1,14 +1,13 @@
 package dk.mrspring.wasteland.common.world;
 
+import dk.mrspring.wasteland.common.WastelandBiomes;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.layer.*;
 import net.minecraftforge.common.BiomeManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created on 15-09-2015 for TheWastelandMod.
@@ -17,34 +16,31 @@ public class WastelandGenLayerBiome extends GenLayer
 {
     private List<BiomeManager.BiomeEntry> biomes = new ArrayList<>();
 
-    public WastelandGenLayerBiome(long seed, GenLayer parent, WorldType type)
+    public WastelandGenLayerBiome(long seed, GenLayer parent)
     {
         super(seed);
         super.parent = parent;
-//        if (ModConfig.spawnCities)
-//        {
-//            for (i = 0; i < 1; ++i)
-//            {
-//                this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.city, 10));
-//            }
-//        }
-//
-//        for (i = 0; i < 3; ++i)
-//        {
-//            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.radioactive, 10));
-//        }
-//
-//        for (i = 0; i < 10; ++i)
-//        {
-//            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.forest, 10));
-//            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.mountains, 10));
-//        }
-//
-//        for (i = 0; i < 40; ++i)
-//        {
-//            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.apocalypse, 10));
-//        }
-        biomes.add(new BiomeManager.BiomeEntry(BiomeGenBase.plains, 10));
+
+        for (int i = 0; i < 1; ++i)
+        {
+            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.city, 10));
+        }
+
+        for (int i = 0; i < 3; ++i)
+        {
+            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.radioactive, 10));
+        }
+
+        for (int i = 0; i < 10; ++i)
+        {
+            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.forest, 10));
+            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.mountains, 10));
+        }
+
+        for (int i = 0; i < 40; ++i)
+        {
+            this.biomes.add(new BiomeManager.BiomeEntry(WastelandBiomes.apocalypse, 10));
+        }
     }
 
     public static GenLayer[] initializeAllBiomeGenerators(long seed, WorldType type)
@@ -72,7 +68,7 @@ public class WastelandGenLayerBiome extends GenLayer
         GenLayer genLayer = GenLayerZoom.magnify(1000L, genLayer2, 0);
         GenLayer object = type.getBiomeLayer(seed, genLayer2, "");
         GenLayer genlayer1 = GenLayerZoom.magnify(1000L, genLayer, 2);
-        GenLayerHills genlayerhills = new GenLayerHills(1000L, (GenLayer) object, genlayer1);
+        GenLayerHills genlayerhills = new GenLayerHills(1000L, object, genlayer1);
         genLayer = GenLayerZoom.magnify(1000L, genLayer, 2);
         genLayer = GenLayerZoom.magnify(1000L, genLayer, biomeSize);
         GenLayerSmooth genlayersmooth = new GenLayerSmooth(1000L, genLayer);
@@ -103,7 +99,7 @@ public class WastelandGenLayerBiome extends GenLayer
 
     public int[] getInts(int p_75904_1_, int p_75904_2_, int p_75904_3_, int p_75904_4_)
     {
-        int[] aint = super.parent.getInts(p_75904_1_, p_75904_2_, p_75904_3_, p_75904_4_);
+        super.parent.getInts(p_75904_1_, p_75904_2_, p_75904_3_, p_75904_4_);
         int[] aint1 = IntCache.getIntCache(p_75904_3_ * p_75904_4_);
 
         for (int i1 = 0; i1 < p_75904_4_; ++i1)
@@ -111,39 +107,10 @@ public class WastelandGenLayerBiome extends GenLayer
             for (int j1 = 0; j1 < p_75904_3_; ++j1)
             {
                 this.initChunkSeed((long) (j1 + p_75904_1_), (long) (i1 + p_75904_2_));
-                int k1 = aint[j1 + i1 * p_75904_3_];
-                int l1 = (k1 & 3840) >> 8;
-                k1 &= -3841;
                 aint1[j1 + i1 * p_75904_3_] = ((BiomeManager.BiomeEntry) WeightedRandom.getRandomItem(this.biomes, (int) (this.nextLong((long) (WeightedRandom.getTotalWeight(this.biomes) / 10)) * 10L))).biome.biomeID;
             }
         }
 
         return aint1;
-    }
-
-    private static int pickBiome(List<BiomeManager.BiomeEntry> biomes)
-    {
-        Random rand = new Random();
-        int totalWeight = 0;
-
-        int num;
-        for (num = 0; num < biomes.size(); ++num)
-        {
-            totalWeight += ((BiomeManager.BiomeEntry) biomes.get(num)).itemWeight;
-        }
-
-        num = rand.nextInt(totalWeight);
-        int sum = 0;
-
-        for (int i = 0; i < biomes.size(); ++i)
-        {
-            sum += ((BiomeManager.BiomeEntry) biomes.get(1)).itemWeight;
-            if (sum > num)
-            {
-                return ((BiomeManager.BiomeEntry) biomes.get(i)).biome.biomeID;
-            }
-        }
-
-        return pickBiome(biomes);
     }
 }

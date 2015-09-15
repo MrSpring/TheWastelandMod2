@@ -1,6 +1,6 @@
 package dk.mrspring.wasteland.common.world;
 
-import com.google.common.collect.Lists;
+import dk.mrspring.wasteland.common.WastelandBiomes;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.BlockPos;
@@ -18,7 +18,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -27,17 +26,22 @@ import java.util.Random;
  */
 public class ChunkManagerWasteland extends WorldChunkManager
 {
-    public static ArrayList<BiomeGenBase> allowedBiomes = Lists.newArrayList(/*apocalypse, mountains, forest*/BiomeGenBase.plains);
+    private static List<BiomeGenBase> allowedBiomes = null;
     private GenLayer genBiomes;
     private GenLayer biomeIndexLayer;
     private BiomeCache biomeCache;
-    private List biomesToSpawnIn;
+    private List<BiomeGenBase> biomesToSpawnIn;
+
+    public static List<BiomeGenBase> getAllowedBiomes()
+    {
+        if (allowedBiomes == null) allowedBiomes = WastelandBiomes.getAllBiomes();
+        return allowedBiomes;
+    }
 
     protected ChunkManagerWasteland()
     {
         this.biomeCache = new BiomeCache(this);
-        this.biomesToSpawnIn = new ArrayList();
-        this.biomesToSpawnIn.addAll(allowedBiomes);
+        this.biomesToSpawnIn = new ArrayList<>(getAllowedBiomes());
     }
 
     public ChunkManagerWasteland(long p_i1975_1_, WorldType p_i1975_3_)
@@ -286,10 +290,5 @@ public class ChunkManagerWasteland extends WorldChunkManager
         WorldTypeEvent.InitBiomeGens event = new WorldTypeEvent.InitBiomeGens(worldType, seed, original);
         MinecraftForge.TERRAIN_GEN_BUS.post(event);
         return event.newBiomeGens;
-    }
-
-    static // TODO: Move
-    {
-        allowedBiomes = new ArrayList<>(Arrays.asList(BiomeGenBase.plains/*new BiomeGenBase[]{WastelandBiomes.apocalypse, WastelandBiomes.mountains, WastelandBiomes.forest}*/));
     }
 }

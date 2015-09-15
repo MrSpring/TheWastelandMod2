@@ -2,6 +2,7 @@ package dk.mrspring.wasteland.common.world;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.layer.GenLayer;
 import net.minecraft.world.gen.layer.GenLayerBiomeEdge;
@@ -20,15 +21,20 @@ public class WorldTypeWasteland extends WorldType // TODO: Customization
     @Override
     public IChunkProvider getChunkGenerator(World world, String generatorOptions)
     {
-        return new ChunkProviderWasteland(world, world.getSeed(), world.getWorldInfo().isMapFeaturesEnabled(), "");
+        return new ChunkProviderWasteland(world);
+    }
+
+    @Override
+    public WorldChunkManager getChunkManager(World world)
+    {
+        return new ChunkManagerWasteland(world);
     }
 
     @Override
     public GenLayer getBiomeLayer(long worldSeed, GenLayer parentLayer, String chunkProviderSettingsJson)
     {
-        WastelandGenLayerBiome ret = new WastelandGenLayerBiome(200L, parentLayer, this);
+        WastelandGenLayerBiome ret = new WastelandGenLayerBiome(200L, parentLayer);
         GenLayer ret1 = GenLayerZoom.magnify(1000L, ret, 2);
-        GenLayerBiomeEdge ret2 = new GenLayerBiomeEdge(1000L, ret1);
-        return ret2;
+        return new GenLayerBiomeEdge(1000L, ret1);
     }
 }

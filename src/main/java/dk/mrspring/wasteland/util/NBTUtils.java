@@ -6,8 +6,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -20,12 +19,36 @@ public class NBTUtils
         try
         {
             IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(location);
-            DataInputStream input = new DataInputStream(new GZIPInputStream(resource.getInputStream()));
+            return getFromStream(resource.getInputStream());
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static NBTTagCompound getFromFile(File file)
+    {
+        try
+        {
+            return getFromStream(new FileInputStream(file));
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static NBTTagCompound getFromStream(InputStream stream)
+    {
+        try
+        {
+            DataInputStream input = new DataInputStream(new GZIPInputStream(stream));
             return CompressedStreamTools.read(input);
         } catch (IOException e)
         {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }
